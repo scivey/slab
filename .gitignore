@@ -1,0 +1,12 @@
+a.out
+*.o
+*.so
+*.pyc
+*.pyo
+node_modules
+*.log
+*.tmp
+tmp
+temp
+app
+server_bin
