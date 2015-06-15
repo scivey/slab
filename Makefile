@@ -1,18 +1,25 @@
-CC=g++
-CFLAGS=--std=c++11
-INC=-I/usr/include/mysql -I./src
-LINK=-lmysqlclient -lmysqlpp -lmicrohttpd
+CC=gcc
+CFLAGS=--std=c99
+INC=-I./src
+LINK=
 
 OBJ=$(addprefix ./src/, \
-		main.o \
-		models.o \
+		memory_slab.o \
+		free_list.o \
+		point.o \
 	)
 
-app: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LINK)
+app: ./src/main.o $(OBJ)
+	$(CC) $(CFLAGS) $(INC) -o $@ $< $(OBJ) $(LINK)
 
-./src/%.o:./src/%.cpp
+./src/%.o:./src/%.c
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
-mysql:
-	mysql -uroot -pF1b3rFl4k3s cppappdb
+test: ./tests/tests.cpp $(OBJ)
+	g++ --std=c++11 -I./tests -I./src -o ./test_runner $< $(OBJ)
+
+.PHONY: clean
+
+clean:
+	rm -f src/*.o
+	rm -f tests/*.o
